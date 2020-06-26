@@ -1,3 +1,11 @@
+/*
+ * @Author: zhipeng
+ * @Date: 2020-06-21 12:28:32
+ * @LastEditTime: 2020-06-21 15:18:45
+ * @LastEditors: Please set LastEditors
+ * @Description: setting webpack require file
+ * @FilePath: /vue-admin-platform/build/webpack.base.conf.js
+ */ 
 'use strict'
 const path = require('path')
 const utils = require('./utils')
@@ -54,6 +62,8 @@ module.exports = {
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
+        // files
+        exclude: [resolve('src/assets/icons')],
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
@@ -73,6 +83,15 @@ module.exports = {
         options: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+        }
+      },
+      // add svg setting
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+        include: [resolve('src/assets/icons')],
+        options: {
+          symbolId: 'icon-[name]'
         }
       }
     ]
