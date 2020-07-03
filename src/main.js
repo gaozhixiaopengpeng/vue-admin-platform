@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-06-21 15:26:16
+ * @LastEditTime: 2020-06-27 20:12:46
  * @LastEditors: Please set LastEditors
  * @Description: mian
  * @FilePath: /vue-admin-platform/src/main.js
@@ -10,7 +10,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import router from './router/index'
+import router from './router/routers'
+import store from './store'
 
 import Element from 'element-ui'
 import './assets/icons'// svg-icon
@@ -22,6 +23,9 @@ import './assets/styles/element-variables.scss'
 // global css
 import './assets/styles/index.scss'
 
+// permission control
+import './router/index'
+
 Vue.config.productionTip = false
 
 Vue.use(Element)
@@ -30,5 +34,6 @@ Vue.use(Element)
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })

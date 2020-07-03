@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-06-21 18:48:23
+ * @LastEditTime: 2020-06-27 12:59:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /vue-admin-platform/config/index.js
@@ -11,7 +11,6 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-const Config = require("settings.js")
 
 module.exports = {
   dev: {
@@ -21,14 +20,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: process.env.VUE_APP_BASE_API,
+        target: "http://localhost:8080/",
         changeOrigin: true,
         pathRewrite: {
           '^/api': 'api'
         }
       },
       '/auth': {
-        target: process.env.VUE_APP_BASE_API,
+        target: "http://localhost:8080/",
         changeOrigin: true,
         pathRewrite: {
           '^/auth': 'auth'

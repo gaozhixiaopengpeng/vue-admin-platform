@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-06-21 12:55:23
- * @LastEditTime: 2020-06-26 14:00:34
+ * @LastEditTime: 2020-07-03 21:45:47
  * @LastEditors: Please set LastEditors
  * @Description: Admin Platform Login Page
  * @FilePath: /vue-admin-platform/src/views/Login/Login.vue
@@ -50,8 +50,10 @@
 </template>
 
 <script>
-// import Config from '@/settings'
+import Config from '@/settings'
 import { getCodeImg } from '@/api/login'
+import Cookies from 'js-cookie'
+import { encrypt } from '@/utils/rsaEncrypt'
 
 export default {
   name: 'Login',
@@ -75,14 +77,22 @@ export default {
       redirect: undefined
     }
   },
+  watch: {
+    $route: {
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect
+      },
+      immediate: true
+    }
+  },
   created () {
     this.getCode()
+    this.getCookie()
   },
   methods: {
     getCode () {
       getCodeImg()
         .then((data) => {
-          console.log(data)
           this.codeUrl = data.img
           this.loginForm.uuid = data.uuid
         })
@@ -92,13 +102,54 @@ export default {
         })
     },
     getCookie () {
-
+      const username = Cookies.get('username')
+      let password = Cookies.get('password')
+      const rememberMe = Cookies.get('rememberMe')
+      // 保存cookie里面的加密后的密码
+      this.cookiePass = password === undefined ? '' : password
+      password = password === undefined ? this.loginForm.password : password
+      this.loginForm = {
+        username: username === undefined ? this.loginForm.username : username,
+        password: password,
+        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
+        code: ''
+      }
     },
     handleLogin () {
-      // validate form
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(valid => {
+        const user = {
+          username: this.loginForm.username,
+          password: this.loginForm.password,
+          rememberMe: this.loginForm.rememberMe,
+          code: this.loginForm.code,
+          uuid: this.loginForm.uuid
+        }
+        if (user.password !== this.cookiePass) {
+          user.password = encrypt(user.password)
+        }
         if (valid) {
-          this.$router.push('/dashboard')
+          this.loading = true
+          if (user.rememberMe) {
+            Cookies.set('username', user.username, { expires: Config.passCookieExpires })
+            Cookies.set('password', user.password, { expires: Config.passCookieExpires })
+            Cookies.set('rememberMe', user.rememberMe, { expires: Config.passCookieExpires })
+          } else {
+            Cookies.remove('username')
+            Cookies.remove('password')
+            Cookies.remove('rememberMe')
+          }
+          console.log('login1111111')
+          this.$store.dispatch('Login', user)
+            .then(() => {
+              console.log('Login=======')
+              this.loading = false
+              this.$router.push({ path: this.redirect || '/' })
+            })
+            .catch(() => {
+              this.loading = false
+              this.getCode()
+            })
+          console.log('login2222222')
         } else {
           console.log('error submit!!')
           return false

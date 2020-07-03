@@ -1,3 +1,11 @@
+/*
+ * @Author: zhipeng
+ * @Date: 2020-06-21 12:28:32
+ * @LastEditTime: 2020-06-26 14:21:31
+ * @LastEditors: Please set LastEditors
+ * @Description: Webpack dev config
+ * @FilePath: /vue-admin-platform/build/webpack.dev.conf.js
+ */ 
 'use strict'
 const utils = require('./utils')
 const webpack = require('webpack')
@@ -55,7 +63,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
-      inject: true
+      inject: true,
+      favicon: path.resolve('favicon.ico')
     }),
     // copy custom static assets
     new CopyWebpackPlugin([
