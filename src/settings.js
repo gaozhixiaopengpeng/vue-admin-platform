@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:42:51
- * @LastEditTime: 2020-07-02 20:11:06
+ * @LastEditTime: 2020-07-08 20:30:52
  * @LastEditors: Please set LastEditors
  * @Description: Config
  * @FilePath: /vue-admin-platform/src/settings.js
@@ -15,6 +15,10 @@ export default {
    * @description api请求地址
    */
   api: 'http://localhost:8080/',
+  /**
+   * @description 默认语言
+   */
+  language: 'en',
   /**
    * @description token key
    */
