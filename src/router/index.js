@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-07-03 21:38:56
+ * @LastEditTime: 2020-07-31 13:33:41
  * @LastEditors: Please set LastEditors
  * @Description: setting vue-router
  * @FilePath: /vue-admin-platform/src/router/index.js
@@ -25,6 +25,7 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title + ' - ' + Config.title
   }
   NProgress.start() // show progress bar
+
   if (getToken()) {
     if (to.path === '/login') {
       next({ path: '/' })

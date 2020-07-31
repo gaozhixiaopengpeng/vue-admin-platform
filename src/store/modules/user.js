@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-27 19:02:41
- * @LastEditTime: 2020-07-03 21:53:03
+ * @LastEditTime: 2020-07-31 13:34:14
  * @LastEditors: Please set LastEditors
  * @Description: User store
  * @FilePath: /vue-admin-platform/src/store/modules/user.js
@@ -27,6 +27,8 @@ const user = {
       state.roles = roles
     },
     SET_LOAD_MENUS: (state, loadMenus) => {
+      console.log('loadMenus====================')
+      console.log(loadMenus)
       state.loadMenus = loadMenus
     }
   },
@@ -37,6 +39,8 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo.username, userInfo.password, userInfo.code, userInfo.uuid)
           .then(res => {
+            console.log('res------------')
+            console.log(res)
             setToken(res.token, rememberMe)
             commit('SET_TOKEN', res.token)
             setUserInfo(res.user, commit)
