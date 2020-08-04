@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-07-08 20:43:53
+ * @LastEditTime: 2020-08-04 20:29:33
  * @LastEditors: Please set LastEditors
  * @Description: mian
  * @FilePath: /vue-admin-platform/src/main.js

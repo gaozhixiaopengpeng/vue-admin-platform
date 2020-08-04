@@ -1,14 +1,15 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-07-10 18:00:45
+ * @LastEditTime: 2020-08-04 20:27:44
  * @LastEditors: Please set LastEditors
  * @Description: Router page
  * @FilePath: /vue-admin-platform/src/router/index.js
  */
 import Vue from 'vue'
 import Router from 'vue-router'
-import Sidebar from '@/Sidebar'
+// import Sidebar from '@/Sidebar'
+import Layout from '@/layout'
 
 Vue.use(Router)
 
@@ -42,7 +43,7 @@ export const constantRouterMap = [
   },
   {
     path: '/',
-    component: Sidebar,
+    component: Layout,
     redirect: '/dashboard',
     children: [
       {
