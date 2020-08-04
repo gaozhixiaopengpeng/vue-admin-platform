@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-07-31 16:01:46
- * @LastEditTime: 2020-07-31 17:49:19
+ * @LastEditTime: 2020-08-04 21:54:31
  * @LastEditors: Please set LastEditors
  * @Description: Right sidebar Setting
  * @FilePath: /vue-admin-platform/src/layout/components/Settings/index.vue
@@ -51,7 +51,7 @@ export default {
   computed: {
     tagsView: {
       get () {
-        return this.$store.settings.tagsView
+        return this.$store.state.settings.tagsView
       },
       set (val) {
         this.$store.dispatch('settings/changeSetting', {
@@ -62,7 +62,7 @@ export default {
     },
     fixedHeader: {
       get () {
-        return this.$store.settings.fixedHeader
+        return this.$store.state.settings.fixedHeader
       },
       set (val) {
         this.$store.dispatch('settings/changeSetting', {
@@ -73,7 +73,7 @@ export default {
     },
     sidebarLogo: {
       get () {
-        return this.$store.settings.sidebarLogo
+        return this.$store.state.settings.sidebarLogo
       },
       set (val) {
         this.$store.dispatch('settings/changeSetting', {

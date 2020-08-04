@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-04 18:01:12
- * @LastEditTime: 2020-08-04 20:30:38
+ * @LastEditTime: 2020-08-04 21:55:44
  * @LastEditors: Please set LastEditors
  * @Description: Layout
  * @FilePath: /vue-admin-platform/src/layout/index.vue
@@ -10,22 +10,28 @@
   <div :class="classObj" class="classObj">
     <div v-if="device==='mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
+    <div :class="{hasTagsView: needTagsView}" class="main-container">
+         <settings />
+    </div>
+
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { Sidebar } from './components/index'
+import { Sidebar, Settings } from './components/index'
 
 export default {
   name: 'Layout',
   components: {
-    Sidebar
+    Sidebar,
+    Settings
   },
   computed: {
     ...mapState({
       sidebar: (state) => state.app.sidebar,
-      device: (state) => state.app.device
+      device: (state) => state.app.device,
+      needTagsView: state => state.settings.tagsView
     }),
     classObj () {
       return {
