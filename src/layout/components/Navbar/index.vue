@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 18:20:48
- * @LastEditTime: 2020-08-09 18:46:55
+ * @LastEditTime: 2020-08-09 19:55:13
  * @LastEditors: Please set LastEditors
  * @Description: Navbar settings
  * @FilePath: /vue-admin-platform/src/layout/components/Navbar/index.vue
@@ -13,6 +13,10 @@
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <github class="right-menu-item hover-effect" />
         </el-tooltip>
+
+                <el-tooltip content="全屏缩放" effect="dark" placement="bottom">
+          <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        </el-tooltip>
       </template>
     </div>
   </div>
@@ -21,10 +25,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import Github from '@/components/Github'
+import Screenfull from '@/components/Screenfull'
 
 export default {
   components: {
-    Github
+    Github,
+    Screenfull
   },
   computed: {
     ...mapGetters(['device'])

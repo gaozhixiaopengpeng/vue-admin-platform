@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-26 16:07:02
- * @LastEditTime: 2020-08-09 18:10:53
+ * @LastEditTime: 2020-08-09 18:48:11
  * @LastEditors: Please set LastEditors
  * @Description: Store: settings
  * @FilePath: /vue-admin-platform/src/store/modules/settings.js
@@ -14,7 +14,7 @@ const { tagsView, fixedHeader, sidebarLogo, uniqueOpened, showFooter, footerTxt,
 
 const state = {
   theme: variables.theme,
-  showSettings: true,
+  showSettings: false,
   tagsView: tagsView,
   fixedHeader: fixedHeader,
   sidebarLogo: sidebarLogo,
