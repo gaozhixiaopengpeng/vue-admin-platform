@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-04 18:01:12
- * @LastEditTime: 2020-08-04 21:55:44
+ * @LastEditTime: 2020-08-09 18:08:58
  * @LastEditors: Please set LastEditors
  * @Description: Layout
  * @FilePath: /vue-admin-platform/src/layout/index.vue
@@ -11,13 +11,15 @@
     <div v-if="device==='mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
     <div :class="{hasTagsView: needTagsView}" class="main-container">
-         <settings />
+      <right-panel v-if="showSettings">
+        <settings />
+      </right-panel>
     </div>
-
   </div>
 </template>
 
 <script>
+import RightPanel from '@/components/RightPanel'
 import { mapState } from 'vuex'
 import { Sidebar, Settings } from './components/index'
 
@@ -25,13 +27,15 @@ export default {
   name: 'Layout',
   components: {
     Sidebar,
-    Settings
+    Settings,
+    RightPanel
   },
   computed: {
     ...mapState({
       sidebar: (state) => state.app.sidebar,
       device: (state) => state.app.device,
-      needTagsView: state => state.settings.tagsView
+      needTagsView: state => state.settings.tagsView,
+      showSettings: state => state.settings.showSettings
     }),
     classObj () {
       return {
