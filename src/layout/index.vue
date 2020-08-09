@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-04 18:01:12
- * @LastEditTime: 2020-08-09 18:08:58
+ * @LastEditTime: 2020-08-09 18:26:56
  * @LastEditors: Please set LastEditors
  * @Description: Layout
  * @FilePath: /vue-admin-platform/src/layout/index.vue
@@ -11,6 +11,9 @@
     <div v-if="device==='mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
     <div :class="{hasTagsView: needTagsView}" class="main-container">
+      <div :class="{'fixed-header': fixedHeader}">
+        <navbar />
+      </div>
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
@@ -21,21 +24,23 @@
 <script>
 import RightPanel from '@/components/RightPanel'
 import { mapState } from 'vuex'
-import { Sidebar, Settings } from './components/index'
+import { Sidebar, Settings, Navbar } from './components'
 
 export default {
   name: 'Layout',
   components: {
     Sidebar,
     Settings,
-    RightPanel
+    RightPanel,
+    Navbar
   },
   computed: {
     ...mapState({
       sidebar: (state) => state.app.sidebar,
       device: (state) => state.app.device,
-      needTagsView: state => state.settings.tagsView,
-      showSettings: state => state.settings.showSettings
+      needTagsView: (state) => state.settings.tagsView,
+      showSettings: (state) => state.settings.showSettings,
+      fixedHeader: (state) => state.settings.fixedHeader
     }),
     classObj () {
       return {
@@ -77,5 +82,22 @@ export default {
   height: 100%;
   position: absolute;
   z-index: 999;
+}
+.fixed-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9;
+  width: calc(100% - #{$sideBarWidth});
+  transition: width 0.28s;
+  padding: 0;
+}
+
+.hideSidebar .fixed-header {
+  width: calc(100% - 54px);
+}
+
+.mobile .fixed-header {
+  width: 100%;
 }
 </style>
