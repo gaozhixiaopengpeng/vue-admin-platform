@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-27 19:02:41
- * @LastEditTime: 2020-08-11 16:57:19
+ * @LastEditTime: 2020-08-11 18:01:19
  * @LastEditors: Please set LastEditors
  * @Description: User store
  * @FilePath: /vue-admin-platform/src/store/modules/user.js
@@ -27,8 +27,6 @@ const user = {
       state.roles = roles
     },
     SET_LOAD_MENUS: (state, loadMenus) => {
-      console.log('loadMenus====================')
-      console.log(loadMenus)
       state.loadMenus = loadMenus
     }
   },

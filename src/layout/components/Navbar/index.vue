@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 18:20:48
- * @LastEditTime: 2020-08-11 16:55:12
+ * @LastEditTime: 2020-08-11 18:13:46
  * @LastEditors: Please set LastEditors
  * @Description: Navbar settings
  * @FilePath: /vue-admin-platform/src/layout/components/Navbar/index.vue
@@ -22,6 +22,29 @@
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
       </template>
+
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+        <div class="avatar-wrapper">
+          <img
+            :src="user.avatar ? baseApi + '/avatar/' + user.avatar : Avatar"
+            alt
+            class="user-avatar"
+          />
+          <i class="el-icon-caret-bottom" />
+        </div>
+
+        <el-dropdown-menu slot="dropdown">
+          <a target="_blank" href="#">
+            <el-dropdown-item>项目文档</el-dropdown-item>
+          </a>
+          <span style="display:block;" @click="show=true">
+            <el-dropdown-item>布局设置</el-dropdown-item>
+          </span>
+          <span style="display:block;" @click="open">
+            <el-dropdown-item divided>退出登录</el-dropdown-item>
+          </span>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -31,6 +54,7 @@ import { mapGetters } from 'vuex'
 import Github from '@/components/Github'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
+import Avatar from '@/assets/images/avatar.png'
 
 export default {
   components: {
@@ -38,8 +62,42 @@ export default {
     Screenfull,
     SizeSelect
   },
+  data () {
+    return {
+      Avatar: Avatar
+    }
+  },
   computed: {
-    ...mapGetters(['device'])
+    ...mapGetters(['device', 'user', 'baseApi']),
+    show: {
+      get () {
+        return this.$store.state.settings.showSettings
+      },
+      set (val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'showSettings',
+          value: val
+        })
+      }
+    }
+  },
+  methods: {
+    open () {
+      this.$confirm('确定注销并退出系统吗？', '退出登陆', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.logout()
+        })
+    },
+    logout () {
+      this.$store.dispatch('LogOut')
+        .then(() => {
+          window.location.reload()
+        })
+    }
   }
 }
 </script>
