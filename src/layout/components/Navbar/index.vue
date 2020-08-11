@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 18:20:48
- * @LastEditTime: 2020-08-11 18:13:46
+ * @LastEditTime: 2020-08-11 18:16:52
  * @LastEditors: Please set LastEditors
  * @Description: Navbar settings
  * @FilePath: /vue-admin-platform/src/layout/components/Navbar/index.vue
@@ -40,6 +40,9 @@
           <span style="display:block;" @click="show=true">
             <el-dropdown-item>布局设置</el-dropdown-item>
           </span>
+          <router-link to>
+            <el-dropdown-item>个人中心</el-dropdown-item>
+          </router-link>
           <span style="display:block;" @click="open">
             <el-dropdown-item divided>退出登录</el-dropdown-item>
           </span>
@@ -87,16 +90,14 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
+      }).then(() => {
+        this.logout()
       })
-        .then(() => {
-          this.logout()
-        })
     },
     logout () {
-      this.$store.dispatch('LogOut')
-        .then(() => {
-          window.location.reload()
-        })
+      this.$store.dispatch('LogOut').then(() => {
+        window.location.reload()
+      })
     }
   }
 }
