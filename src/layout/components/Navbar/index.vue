@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 18:20:48
- * @LastEditTime: 2020-08-09 19:55:13
+ * @LastEditTime: 2020-08-11 16:55:12
  * @LastEditors: Please set LastEditors
  * @Description: Navbar settings
  * @FilePath: /vue-admin-platform/src/layout/components/Navbar/index.vue
@@ -14,8 +14,12 @@
           <github class="right-menu-item hover-effect" />
         </el-tooltip>
 
-                <el-tooltip content="全屏缩放" effect="dark" placement="bottom">
+        <el-tooltip content="全屏缩放" effect="dark" placement="bottom">
           <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        </el-tooltip>
+
+        <el-tooltip content="布局设置" effect="dark" placement="bottom">
+          <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
       </template>
     </div>
@@ -26,11 +30,13 @@
 import { mapGetters } from 'vuex'
 import Github from '@/components/Github'
 import Screenfull from '@/components/Screenfull'
+import SizeSelect from '@/components/SizeSelect'
 
 export default {
   components: {
     Github,
-    Screenfull
+    Screenfull,
+    SizeSelect
   },
   computed: {
     ...mapGetters(['device'])

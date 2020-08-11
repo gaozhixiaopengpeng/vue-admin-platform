@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-27 19:02:41
- * @LastEditTime: 2020-07-31 13:34:14
+ * @LastEditTime: 2020-08-11 16:57:19
  * @LastEditors: Please set LastEditors
  * @Description: User store
  * @FilePath: /vue-admin-platform/src/store/modules/user.js
@@ -39,8 +39,6 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo.username, userInfo.password, userInfo.code, userInfo.uuid)
           .then(res => {
-            console.log('res------------')
-            console.log(res)
             setToken(res.token, rememberMe)
             commit('SET_TOKEN', res.token)
             setUserInfo(res.user, commit)
