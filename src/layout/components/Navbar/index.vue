@@ -1,13 +1,20 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 18:20:48
- * @LastEditTime: 2020-08-11 21:24:48
+ * @LastEditTime: 2020-08-13 16:43:27
  * @LastEditors: Please set LastEditors
  * @Description: Navbar settings
  * @FilePath: /vue-admin-platform/src/layout/components/Navbar/index.vue
 -->
 <template>
   <div class="navbar">
+    <hamburger
+      id="hamburger-container"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
+
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
@@ -42,7 +49,7 @@
           <span style="display:block;" @click="show=true">
             <el-dropdown-item>布局设置</el-dropdown-item>
           </span>
-          <router-link to="">
+          <router-link to>
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
           <span style="display:block;" @click="open">
@@ -61,13 +68,15 @@ import Github from '@/components/Github'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Avatar from '@/assets/images/avatar.png'
+import Hamburger from '@/components/Hamburger'
 
 export default {
   components: {
     Search,
     Github,
     Screenfull,
-    SizeSelect
+    SizeSelect,
+    Hamburger
   },
   data () {
     return {
@@ -75,7 +84,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['device', 'user', 'baseApi']),
+    ...mapGetters(['device', 'user', 'baseApi', 'sidebar']),
     show: {
       get () {
         return this.$store.state.settings.showSettings
@@ -102,6 +111,9 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         window.location.reload()
       })
+    },
+    toggleSideBar () {
+      this.$store.dispatch('app/toggleSideBar')
     }
   }
 }
