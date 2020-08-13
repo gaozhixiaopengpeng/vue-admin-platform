@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 18:20:48
- * @LastEditTime: 2020-08-11 18:16:52
+ * @LastEditTime: 2020-08-11 21:24:48
  * @LastEditors: Please set LastEditors
  * @Description: Navbar settings
  * @FilePath: /vue-admin-platform/src/layout/components/Navbar/index.vue
@@ -10,6 +10,8 @@
   <div class="navbar">
     <div class="right-menu">
       <template v-if="device!=='mobile'">
+        <search id="header-search" class="right-menu-item" />
+
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <github class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -40,7 +42,7 @@
           <span style="display:block;" @click="show=true">
             <el-dropdown-item>布局设置</el-dropdown-item>
           </span>
-          <router-link to>
+          <router-link to="">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
           <span style="display:block;" @click="open">
@@ -54,6 +56,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Search from '@/components/HeaderSearch'
 import Github from '@/components/Github'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
@@ -61,6 +64,7 @@ import Avatar from '@/assets/images/avatar.png'
 
 export default {
   components: {
+    Search,
     Github,
     Screenfull,
     SizeSelect
