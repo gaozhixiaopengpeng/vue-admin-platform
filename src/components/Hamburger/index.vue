@@ -1,9 +1,9 @@
 <!--
- * @Author: your name
+ * @Author: zhipeng
  * @Date: 2020-08-13 16:21:52
- * @LastEditTime: 2020-08-13 16:30:23
+ * @LastEditTime: 2020-08-13 16:54:03
  * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
+ * @Description: toggle Hamburger, menu open or close
  * @FilePath: /vue-admin-platform/src/components/Hamburger/index.vue
 -->
 <template>

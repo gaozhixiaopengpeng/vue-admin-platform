@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-11 21:23:20
- * @LastEditTime: 2020-08-13 16:14:09
+ * @LastEditTime: 2020-08-13 17:02:07
  * @LastEditors: Please set LastEditors
  * @Description: query search
  * @FilePath: /vue-admin-platform/src/components/HeaderSearch/index.vue
@@ -20,7 +20,7 @@
       class="header-search-select"
       @change="change"
     >
-      <el-option v-for="item of options" :key="item.path" :value="item" :label="item.title.join(' > ')"/>
+      <el-option v-for="item in options" :key="item.path" :value="item" :label="item.title.join(' > ')"/>
     </el-select>
   </div>
 </template>

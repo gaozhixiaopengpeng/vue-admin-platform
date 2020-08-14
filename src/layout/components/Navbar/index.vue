@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 18:20:48
- * @LastEditTime: 2020-08-13 16:43:27
+ * @LastEditTime: 2020-08-13 16:53:30
  * @LastEditors: Please set LastEditors
  * @Description: Navbar settings
  * @FilePath: /vue-admin-platform/src/layout/components/Navbar/index.vue
@@ -14,6 +14,8 @@
       class="hamburger-container"
       @toggleClick="toggleSideBar"
     />
+
+    <breadcrumb />
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
@@ -69,6 +71,7 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Avatar from '@/assets/images/avatar.png'
 import Hamburger from '@/components/Hamburger'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
   components: {
@@ -76,7 +79,8 @@ export default {
     Github,
     Screenfull,
     SizeSelect,
-    Hamburger
+    Hamburger,
+    Breadcrumb
   },
   data () {
     return {

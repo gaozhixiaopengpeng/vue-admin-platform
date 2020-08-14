@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 20:14:08
- * @LastEditTime: 2020-08-11 16:36:02
+ * @LastEditTime: 2020-08-13 17:03:20
  * @LastEditors: Please set LastEditors
  * @Description: change size setting
  * @FilePath: /vue-admin-platform/src/components/SizeSelect/index.vue
@@ -13,7 +13,7 @@
     </div>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item
-        v-for="item of sizeOptions"
+        v-for="item in sizeOptions"
         :key="item.value"
         :disabled="size===item.value"
         :command="item.value"
