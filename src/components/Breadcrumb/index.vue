@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-13 16:53:03
- * @LastEditTime: 2020-08-14 11:18:42
+ * @LastEditTime: 2020-08-17 21:11:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edi
  * @FilePath: /vue-admin-platform/src/components/Breadcrumb/index.vue
@@ -32,9 +32,12 @@ export default {
   watch: {
     $route (route) {
       // if you go to the redirect page, do not update the breadcrumbs
-      if (!route.path.startWidth('/redirect/')) {
-        this.getBreadcrumb()
+      if (route.path.startsWith('/redirect/')) {
+        console.log('redirect========')
+        console.log(route.path)
+        return
       }
+      this.getBreadcrumb()
     }
   },
   created () {
@@ -68,16 +71,16 @@ export default {
       )
     },
     handleLink (item) {
-      const {redirect, path} = item
+      const { redirect, path } = item
       if (redirect) {
         this.$router.push(redirect)
-        return false
+        return
       }
       this.$router.push(this.pathCompile(path))
     },
     pathCompile (path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
-      const {params} = this.$route
+      const { params } = this.$route
       var toPath = pathToRegexp.compile(path)
       return toPath(params)
     }

@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 20:14:08
- * @LastEditTime: 2020-08-13 17:03:20
+ * @LastEditTime: 2020-08-20 21:03:20
  * @LastEditors: Please set LastEditors
  * @Description: change size setting
  * @FilePath: /vue-admin-platform/src/components/SizeSelect/index.vue
@@ -48,6 +48,7 @@ export default {
         message: '布局设置成功',
         type: 'success'
       })
+      // window.location.reload()
     },
     refreshView () {
       // In order to make the cached page re-rendered
@@ -64,3 +65,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.size-icon {
+  font-size: 20px;
+  cursor: pointer;
+  vertical-align: -4px!important;
+}
+</style>

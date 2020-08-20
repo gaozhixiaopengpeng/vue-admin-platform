@@ -1,19 +1,20 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-04 18:01:12
- * @LastEditTime: 2020-08-09 18:26:56
+ * @LastEditTime: 2020-08-17 20:17:34
  * @LastEditors: Please set LastEditors
  * @Description: Layout
  * @FilePath: /vue-admin-platform/src/layout/index.vue
 -->
 <template>
-  <div :class="classObj" class="classObj">
+  <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
     <div :class="{hasTagsView: needTagsView}" class="main-container">
       <div :class="{'fixed-header': fixedHeader}">
         <navbar />
       </div>
+       <app-main />
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
@@ -24,7 +25,8 @@
 <script>
 import RightPanel from '@/components/RightPanel'
 import { mapState } from 'vuex'
-import { Sidebar, Settings, Navbar } from './components'
+import { Sidebar, Settings, Navbar, AppMain } from './components'
+import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
   name: 'Layout',
@@ -32,8 +34,10 @@ export default {
     Sidebar,
     Settings,
     RightPanel,
-    Navbar
+    Navbar,
+    AppMain
   },
+  mixins: [ResizeMixin],
   computed: {
     ...mapState({
       sidebar: (state) => state.app.sidebar,

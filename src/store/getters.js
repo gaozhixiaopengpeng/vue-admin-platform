@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-26 15:21:47
- * @LastEditTime: 2020-08-11 17:33:08
+ * @LastEditTime: 2020-08-14 15:05:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /vue-admin-platform/src/store/getters.js
@@ -16,6 +16,7 @@ const getters = {
   user: state => state.user.user,
   loadMenus: state => state.user.loadMenus,
   language: state => state.app.language,
+  size: state => state.app.size,
   baseApi: state => state.api.baseApi
 }
 

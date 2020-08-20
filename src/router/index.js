@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-07-31 13:33:41
+ * @LastEditTime: 2020-08-17 19:53:23
  * @LastEditors: Please set LastEditors
  * @Description: setting vue-router
  * @FilePath: /vue-admin-platform/src/router/index.js

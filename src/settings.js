@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:42:51
- * @LastEditTime: 2020-07-08 20:30:52
+ * @LastEditTime: 2020-08-17 20:59:05
  * @LastEditors: Please set LastEditors
  * @Description: Config
  * @FilePath: /vue-admin-platform/src/settings.js
@@ -54,5 +54,5 @@ export default {
   /**
    * 备案号
    */
-  caseNumber: 'xxxxxxxxx'
+  caseNumber: 'gaozhipeng1994@163.com'
 }

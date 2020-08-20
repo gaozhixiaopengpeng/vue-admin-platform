@@ -1,14 +1,13 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-08-04 20:27:44
+ * @LastEditTime: 2020-08-17 20:01:50
  * @LastEditors: Please set LastEditors
  * @Description: Router page
  * @FilePath: /vue-admin-platform/src/router/index.js
  */
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Sidebar from '@/Sidebar'
 import Layout from '@/layout'
 
 Vue.use(Router)
@@ -40,6 +39,27 @@ export const constantRouterMap = [
     meta: { title: 'Login', noCache: true },
     component: () => import('@/views/Login'),
     hidden: true
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/ErrorPage/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/ErrorPage/401'),
+    hidden: true
+  },
+  {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path*',
+        component: () => import('@/views/Redirect')
+      }
+    ]
   },
   {
     path: '/',

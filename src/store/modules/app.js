@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-26 15:27:26
- * @LastEditTime: 2020-07-08 20:48:26
+ * @LastEditTime: 2020-08-14 14:54:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /vue-admin-platform/src/store/modules/app.js
@@ -17,7 +17,8 @@ const state = {
     withoutAnimation: false
   },
   device: 'desktop',
-  language: getLanguage()
+  language: getLanguage(),
+  size: Cookies.get('size') || 'small'
 }
 
 const mutations = {
@@ -42,6 +43,10 @@ const mutations = {
   SET_LANGUAGE: (state, language) => {
     state.language = language
     Cookies.set('language', language)
+  },
+  SET_SIZE: (state, size) => {
+    state.size = size
+    Cookies.set('size', size)
   }
 }
 
@@ -57,6 +62,9 @@ const actions = {
   },
   setLanguage ({ commit }, language) {
     commit('SET_LANGUAGE', language)
+  },
+  setSize ({commit}, size) {
+    commit('SET_SIZE', size)
   }
 }
 
