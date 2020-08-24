@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-04 18:01:12
- * @LastEditTime: 2020-08-17 20:17:34
+ * @LastEditTime: 2020-08-24 20:41:41
  * @LastEditors: Please set LastEditors
  * @Description: Layout
  * @FilePath: /vue-admin-platform/src/layout/index.vue
@@ -13,6 +13,7 @@
     <div :class="{hasTagsView: needTagsView}" class="main-container">
       <div :class="{'fixed-header': fixedHeader}">
         <navbar />
+        <tags-view v-if="needTagsView" />
       </div>
        <app-main />
       <right-panel v-if="showSettings">
@@ -25,7 +26,7 @@
 <script>
 import RightPanel from '@/components/RightPanel'
 import { mapState } from 'vuex'
-import { Sidebar, Settings, Navbar, AppMain } from './components'
+import { Sidebar, Settings, Navbar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
@@ -35,7 +36,8 @@ export default {
     Settings,
     RightPanel,
     Navbar,
-    AppMain
+    AppMain,
+    TagsView
   },
   mixins: [ResizeMixin],
   computed: {
