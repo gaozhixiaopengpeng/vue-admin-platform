@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-20 21:59:33
- * @LastEditTime: 2020-08-29 14:42:32
+ * @LastEditTime: 2020-08-30 19:49:51
  * @LastEditors: Please set LastEditors
  * @Description: visited tag
  * @FilePath: /vue-admin-platform/src/layout/components/TagsView/index.vue
@@ -73,6 +73,13 @@ export default {
     $route () {
       this.addTags()
       this.moveToCurrentTag()
+    },
+    visible (value) {
+      if (value) {
+        document.body.addEventListener('click', this.closeMenu)
+      } else {
+        document.body.removeEventListener('click', this.closeMenu)
+      }
     }
   },
   methods: {
@@ -197,6 +204,9 @@ export default {
         }
         this.toLastView(visitedViews, view)
       })
+    },
+    closeMenu () {
+      this.visible = false
     }
   }
 }
