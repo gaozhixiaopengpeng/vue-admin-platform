@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-08-17 20:01:50
+ * @LastEditTime: 2020-08-29 16:52:16
  * @LastEditors: Please set LastEditors
  * @Description: Router page
  * @FilePath: /vue-admin-platform/src/router/index.js
@@ -75,6 +75,13 @@ export const constantRouterMap = [
     ]
   }
 ]
+
+// fix vue-router > 3.0 error
+// Error: Redirected when going from "/login?redirect=%2Fdashboard" to "/dashboard" via a navigation guard.
+const routerPush = Router.prototype.push
+Router.prototype.push = function push (location) {
+  return routerPush.call(this, location).catch(error => error)
+}
 
 export default new Router({
   mode: 'history',

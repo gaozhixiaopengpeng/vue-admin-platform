@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-02-20 09:34:22
- * @LastEditTime: 2020-08-17 21:09:37
+ * @LastEditTime: 2020-08-29 10:13:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /vue-admin-platform/src/layout/mixin/ResizeHandler.js
@@ -36,7 +36,7 @@ export default {
         }
       }
     },
-    _isMobile () {
+    $_isMobile () {
       const rect = body.getBoundingClientRect()
       return rect.width - 1 < WIDTH
     }

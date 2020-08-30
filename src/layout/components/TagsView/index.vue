@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-20 21:59:33
- * @LastEditTime: 2020-08-24 22:35:55
+ * @LastEditTime: 2020-08-29 14:42:32
  * @LastEditors: Please set LastEditors
  * @Description: visited tag
  * @FilePath: /vue-admin-platform/src/layout/components/TagsView/index.vue
@@ -28,6 +28,15 @@
         />
       </router-link>
     </scroll-pane>
+    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
+      <li @click="refreshSelectedTag(selectedTag)">刷新</li>
+      <li
+        v-if="!(selectedTag.meta&&selectedTag.meta.affix)"
+        @click="closeSelectedTag(selectedTag)"
+      >关闭</li>
+      <li @click="closeOthersTags">关闭其他</li>
+      <li @click="closeAllTags(selectedTag)">关闭全部</li>
+    </ul>
   </div>
 </template>
 
@@ -86,9 +95,24 @@ export default {
         this.$store.dispatch('tagsView/addView', this.$route)
       }
     },
+    moveToCurrentTag () {
+      const tags = this.$refs.tag
+      this.$nextTick(() => {
+        for (const tag of tags) {
+          if (tag.to.path === this.$route.path) {
+            this.$refs.scrollPane.moveToTarget(tag)
+            // when query is different then update
+            if (tag.to.fullPath !== this.$route.fullPath) {
+              this.$store.dispatch('tagsView/updateVisitedView', this.$route)
+            }
+            break
+          }
+        }
+      })
+    },
     filterAffixTags (routes, basePath = '/') {
       let tags = []
-      routes.forEach(route => {
+      routes.forEach((route) => {
         if (route.meta && route.meta.affix) {
           const tagPath = path.resolve(basePath, route.path)
           tags.push({
@@ -116,6 +140,21 @@ export default {
           }
         })
     },
+    toLastView (visitedViews, view) {
+      const latestView = visitedViews.slice(-1)[0]
+      if (latestView) {
+        this.$router.push(latestView)
+      } else {
+        // now the default is to redirect to the home page if there is no tags-view,
+        // you can adjust it according to your needs.
+        if (view.name === 'Dashboard') {
+          // to reload home page
+          this.$router.replace({ path: '/redirect' + view.fullPath })
+        } else {
+          this.$router.push('/')
+        }
+      }
+    },
     openMenu (tag, e) {
       const menuMinWidth = 105
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
@@ -132,6 +171,32 @@ export default {
       this.top = e.clientY
       this.visible = true
       this.selectedTag = tag
+    },
+    refreshSelectedTag (view) {
+      this.$store.dispatch('tagsView/delCachedView', view)
+        .then(() => {
+          const {fullPath} = view
+          this.$nextTick(() => {
+            this.$router.replace({
+              path: '/redirect' + fullPath
+            })
+          })
+        })
+    },
+    closeOthersTags () {
+      this.$router.push(this.selectedTag)
+      this.$store.dispatch('tagsView/delOthersViews', this.selectedTag)
+        .then(() => {
+          this.moveToCurrentTag()
+        })
+    },
+    closeAllTags (view) {
+      this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
+        if (this.affixTags.some(tag => tag.path === view.path)) {
+          return
+        }
+        this.toLastView(visitedViews, view)
+      })
     }
   }
 }

@@ -1,13 +1,13 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-26 17:36:44
- * @LastEditTime: 2020-07-03 21:10:17
+ * @LastEditTime: 2020-08-29 16:12:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /vue-admin-platform/src/store/modules/permission.js
  */
 import { constantRouterMap } from '@/router/routers'
-import Sidebar from '@/Sidebar'
+import Layout from '@/layout'
 
 const permission = {
   state: {
@@ -36,7 +36,7 @@ export const filterAsyncRouter = routers => {
   return routers.filter(router => {
     if (router.component) {
       if (router.component === 'Layout') { // Layout组件特殊处理
-        router.component = Sidebar
+        router.component = Layout
       } else {
         const component = router.component
         router.component = loadView(component)
