@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-08-29 16:52:16
+ * @LastEditTime: 2020-08-30 20:09:00
  * @LastEditors: Please set LastEditors
  * @Description: Router page
  * @FilePath: /vue-admin-platform/src/router/index.js
@@ -71,6 +71,20 @@ export const constantRouterMap = [
         component: () => import('@/views/Dashboard'),
         name: 'Dashboard',
         meta: { title: '首页', icon: 'index', affix: true, noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'center',
+        component: () => import('@/views/system/user/center'),
+        name: '个人中心',
+        meta: { title: '个人中心' }
       }
     ]
   }

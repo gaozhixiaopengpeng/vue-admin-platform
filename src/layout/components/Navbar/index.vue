@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-09 18:20:48
- * @LastEditTime: 2020-08-13 16:53:30
+ * @LastEditTime: 2020-08-30 20:12:40
  * @LastEditors: Please set LastEditors
  * @Description: Navbar settings
  * @FilePath: /vue-admin-platform/src/layout/components/Navbar/index.vue
@@ -51,7 +51,7 @@
           <span style="display:block;" @click="show=true">
             <el-dropdown-item>布局设置</el-dropdown-item>
           </span>
-          <router-link to>
+          <router-link to="/user/center">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
           <span style="display:block;" @click="open">
