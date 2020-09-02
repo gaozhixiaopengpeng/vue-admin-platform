@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 14:43:57
- * @LastEditTime: 2020-06-21 15:07:47
+ * @LastEditTime: 2020-09-02 22:29:11
  * @LastEditors: Please set LastEditors
  * @Description: 校验表达式是否合法
  * @FilePath: /vue-admin-platform/src/utils/validate.js
@@ -58,10 +58,9 @@ export function validAlphabets (str) {
  * @returns {Boolean}
  */
 export function validEmail (email) {
-  const reg = /^(([^<>()\\[\\]\\.,;:\s@"]+(\.[^<>()\\[\\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  const reg = /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return reg.test(email)
 }
-
 /**
  *
  * @param {*} phone: 判断是否是手机号

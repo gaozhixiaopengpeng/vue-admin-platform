@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-30 19:55:59
- * @LastEditTime: 2020-09-01 21:01:47
+ * @LastEditTime: 2020-09-02 21:48:29
  * @LastEditors: Please set LastEditors
  * @Description: Zhipeng
  * @FilePath: /vue-admin-platform/src/views/system/user/center.vue
@@ -65,6 +65,7 @@
         </el-card>
       </el-row>
     </el-row>
+    <updateEmail ref="email" :email="user.email" />
     <updatePass ref="pass" />
   </div>
 </template>
@@ -73,6 +74,7 @@
 import myUpload from 'vue-image-crop-upload'
 import { mapGetters } from 'vuex'
 import updatePass from './center/updatePass'
+import updateEmail from './center/updateEmail'
 import Avatar from '@/assets/images/avatar.png'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
@@ -88,7 +90,7 @@ export default {
       }
     }
   },
-  components: { updatePass, myUpload },
+  components: { updatePass, updateEmail, myUpload },
   computed: {
     ...mapGetters(['user', 'baseApi', 'updateAvatarApi'])
   },
