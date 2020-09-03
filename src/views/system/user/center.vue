@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-30 19:55:59
- * @LastEditTime: 2020-09-02 21:48:29
+ * @LastEditTime: 2020-09-03 21:46:19
  * @LastEditors: Please set LastEditors
  * @Description: Zhipeng
  * @FilePath: /vue-admin-platform/src/views/system/user/center.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-row :xs="24" :sm="24" :md="8" :lg="6" :xl="5" style="margin-bottom: 10px">
+      <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="5" style="margin-bottom: 10px">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>个人信息</span>
@@ -63,8 +63,52 @@
             </ul>
           </div>
         </el-card>
-      </el-row>
+      </el-col>
+      <!-- 用户资料 & 操作日志 -->
+      <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="19">
+        <el-card class="box-card">
+          <el-tabs v-model="activeName" @tab-click="handleClick">
+            <!-- 用户资料 -->
+            <el-tab-pane label="用户资料" name="first">
+              <el-form
+                ref="form"
+                :model="form"
+                :rules="rules"
+                style="margin-top: 10px;"
+                size="small"
+                label-width="65px"
+              >
+                <el-form-item label="昵称" prop="nickName">
+                  <el-input v-model="form.nickName" style="width: 35%" />
+                  <span style="color: #C0C0C0;margin-left: 10px;">用户昵称不作为登录使用</span>
+                </el-form-item>
+                <el-form-item label="手机号" prop="phone">
+                  <el-input v-model="form.phone" style="width: 35%;" />
+                  <span style="color: #C0C0C0;margin-left: 10px;">手机号码不能重复</span>
+                </el-form-item>
+                <el-form-item label="性别">
+                  <el-radio-group v-model="form.gender" style="width: 178px">
+                    <el-radio label="男">男</el-radio>
+                    <el-radio label="女">女</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label>
+                  <el-button
+                    :loading="saveLoading"
+                    size="mini"
+                    type="primary"
+                    @click="doSubmit"
+                  >保存配置</el-button>
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
+            <!--    操作日志    -->
+            <el-tab-pane label="操作日志" name="second"></el-tab-pane>
+          </el-tabs>
+        </el-card>
+      </el-col>
     </el-row>
+
     <updateEmail ref="email" :email="user.email" />
     <updatePass ref="pass" />
   </div>
@@ -78,21 +122,52 @@ import updateEmail from './center/updateEmail'
 import Avatar from '@/assets/images/avatar.png'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import { isvalidPhone } from '@/utils/validate'
+import { editUser } from '@/api/system/user'
 
 export default {
   name: 'Center',
   data () {
+    const validPhone = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入电话号码'))
+      } else if (!isvalidPhone(value)) {
+        callback(new Error('请输入正确的11位手机号码'))
+      } else {
+        callback()
+      }
+    }
     return {
       show: false,
       Avatar: Avatar,
       headers: {
         Authorization: getToken()
-      }
+      },
+      activeName: 'first',
+      form: {},
+      rules: {
+        nickName: [
+          { required: true, message: '请输入用户昵称', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, trigger: 'blur', validator: validPhone }
+        ]
+      },
+      saveLoading: false
     }
   },
   components: { updatePass, updateEmail, myUpload },
   computed: {
     ...mapGetters(['user', 'baseApi', 'updateAvatarApi'])
+  },
+  created () {
+    this.form = {
+      id: this.user.id,
+      nickName: this.user.nickName,
+      gender: this.user.sex,
+      phone: this.user.phone
+    }
   },
   methods: {
     toggleShow () {
@@ -111,6 +186,32 @@ export default {
         title: status,
         type: 'error',
         duration: 2500
+      })
+    },
+    handleClick () {
+
+    },
+    doSubmit () {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.saveLoading = true
+
+          editUser(this.form)
+            .then(res => {
+              this.saveLoading = false
+              this.$notify({
+                title: '编辑成功',
+                type: 'success',
+                duration: 1500
+              })
+              store.dispatch('GetInfo').then(() => {})
+            })
+            .catch(error => {
+              this.saveLoading = false
+              console.log('Update User Information Error')
+              console.log(error)
+            })
+        }
       })
     }
   }
