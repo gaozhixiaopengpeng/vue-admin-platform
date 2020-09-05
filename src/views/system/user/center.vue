@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-30 19:55:59
- * @LastEditTime: 2020-09-03 21:46:19
+ * @LastEditTime: 2020-09-05 15:23:20
  * @LastEditors: Please set LastEditors
  * @Description: Zhipeng
  * @FilePath: /vue-admin-platform/src/views/system/user/center.vue
@@ -87,7 +87,7 @@
                   <span style="color: #C0C0C0;margin-left: 10px;">手机号码不能重复</span>
                 </el-form-item>
                 <el-form-item label="性别">
-                  <el-radio-group v-model="form.gender" style="width: 178px">
+                  <el-radio-group v-model="form.sex" style="width: 178px">
                     <el-radio label="男">男</el-radio>
                     <el-radio label="女">女</el-radio>
                   </el-radio-group>
@@ -103,7 +103,41 @@
               </el-form>
             </el-tab-pane>
             <!--    操作日志    -->
-            <el-tab-pane label="操作日志" name="second"></el-tab-pane>
+            <el-tab-pane label="操作日志" name="second">
+              <el-table v-loading="loading" :data="data" style="width: 100%;">
+                <el-table-column prop="description" label="行为" />
+                <el-table-column prop="requestIp" label="IP" />
+                <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
+                <el-table-column prop="browser" label="浏览器" />
+                <el-table-column prop="time" label="请求耗时" align="center">
+                  <template slot-scope="scope">
+                    <el-tag v-if="scope.row.time <= 300">{{ scope.row.time }}ms</el-tag>
+                    <el-tag v-else-if="scope.row.time <= 1000" type="warning">{{ scope.row.time }}ms</el-tag>
+                    <el-tag v-else type="danger">{{ scope.row.time }}ms</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column align="right">
+                  <template slot="header">
+                    <div style="display:inline-block;float: right;cursor: pointer" @click="init">
+                      创建日期
+                      <i class="el-icon-refresh" style="margin-left: 40px" />
+                    </div>
+                  </template>
+                  <template slot-scope="scope">
+                    <span>{{ parseTime(scope.row.createTime) }}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+
+              <el-pagination
+                :total="total"
+                :current-page="page + 1"
+                style="margin-top: 8px;"
+                layout="total, prev, pager, next, sizes"
+                @size-change="sizeChange"
+                @current-change="pageChange"
+              ></el-pagination>
+            </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
@@ -124,9 +158,13 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import { isvalidPhone } from '@/utils/validate'
 import { editUser } from '@/api/system/user'
+import crud from '@/mixins/crud'
+import { parseTime } from '@/utils/index'
 
 export default {
   name: 'Center',
+  components: { updatePass, updateEmail, myUpload },
+  mixins: [crud],
   data () {
     const validPhone = (rule, value, callback) => {
       if (!value) {
@@ -148,16 +186,18 @@ export default {
       rules: {
         nickName: [
           { required: true, message: '请输入用户昵称', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          {
+            min: 2,
+            max: 20,
+            message: '长度在 2 到 20 个字符',
+            trigger: 'blur'
+          }
         ],
-        phone: [
-          { required: true, trigger: 'blur', validator: validPhone }
-        ]
+        phone: [{ required: true, trigger: 'blur', validator: validPhone }]
       },
       saveLoading: false
     }
   },
-  components: { updatePass, updateEmail, myUpload },
   computed: {
     ...mapGetters(['user', 'baseApi', 'updateAvatarApi'])
   },
@@ -165,11 +205,16 @@ export default {
     this.form = {
       id: this.user.id,
       nickName: this.user.nickName,
-      gender: this.user.sex,
+      sex: this.user.sex,
       phone: this.user.phone
     }
   },
   methods: {
+    parseTime,
+    beforeInit () {
+      this.url = 'api/logs/user'
+      return true
+    },
     toggleShow () {
       this.show = !this.show
     },
@@ -188,25 +233,22 @@ export default {
         duration: 2500
       })
     },
-    handleClick () {
-
+    handleClick (tab, event) {
+      if (tab.name === 'second') {
+        this.init()
+      }
     },
     doSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.saveLoading = true
-
           editUser(this.form)
-            .then(res => {
+            .then((res) => {
               this.saveLoading = false
-              this.$notify({
-                title: '编辑成功',
-                type: 'success',
-                duration: 1500
-              })
+              this.editSuccessNotify()
               store.dispatch('GetInfo').then(() => {})
             })
-            .catch(error => {
+            .catch((error) => {
               this.saveLoading = false
               console.log('Update User Information Error')
               console.log(error)
