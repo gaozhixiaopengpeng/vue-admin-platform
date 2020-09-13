@@ -1,9 +1,9 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-30 19:55:59
- * @LastEditTime: 2020-09-05 15:23:20
+ * @LastEditTime: 2020-09-05 15:39:34
  * @LastEditors: Please set LastEditors
- * @Description: Zhipeng
+ * @Description: User Center
  * @FilePath: /vue-admin-platform/src/views/system/user/center.vue
 -->
 <template>
@@ -105,7 +105,7 @@
             <!--    操作日志    -->
             <el-tab-pane label="操作日志" name="second">
               <el-table v-loading="loading" :data="data" style="width: 100%;">
-                <el-table-column prop="description" label="行为" />
+                <el-table-column :show-overflow-tooltip="true" prop="description" label="行为" />
                 <el-table-column prop="requestIp" label="IP" />
                 <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
                 <el-table-column prop="browser" label="浏览器" />

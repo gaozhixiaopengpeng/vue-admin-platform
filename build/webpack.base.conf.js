@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-08-13 10:46:02
+ * @LastEditTime: 2020-09-08 20:25:22
  * @LastEditors: Please set LastEditors
  * @Description: setting webpack require file
  * @FilePath: /vue-admin-platform/build/webpack.base.conf.js
@@ -44,6 +44,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      '@crud': resolve('src/components/Crud')
     }
   },
   module: {
