@@ -1,13 +1,23 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-09-05 17:45:28
- * @LastEditTime: 2020-09-18 14:00:19
+ * @LastEditTime: 2020-09-18 17:32:13
  * @LastEditors: Please set LastEditors
  * @Description: Menu Management
  * @FilePath: /vue-admin-platform/src/views/system/menu/index.vue
 -->
 <template>
   <div class="app-container">
+    <!--工具栏-->
+    <div class="head-container">
+      <div v-if="crud.props.searchToggle">
+        <!-- 搜索 -->
+        <el-input v-model="query.blurry" clearable size="small" placeholder="模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery"/>
+        <date-range-picker v-model="query.createTime" class="date-item" />
+         <rrOperation />
+      </div>
+      <crudOperation :permission="permission" />
+    </div>
     <!--表格渲染-->
     <el-table
       ref="table"
@@ -22,14 +32,14 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column :show-overflow-tooltip="true" label="菜单标题" width="125px" prop="name" />
+      <el-table-column :show-overflow-tooltip="true" label="菜单标题" width="125px" prop="title" />
       <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon ? scope.row.icon : ''" />
         </template>
       </el-table-column>
-      <el-table-column prop="sort" align="center" label="排序">
-        <template slot-scope="scope">{{ scope.row.sort }}</template>
+      <el-table-column prop="menuSort" align="center" label="排序">
+        <template slot-scope="scope">{{ scope.row.menuSort }}</template>
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识" />
       <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径" />
@@ -81,6 +91,7 @@ import crudMenu from '@/api/system/menu'
 import udOperation from '@crud/UD.operation'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
+import DateRangePicker from '@/components/DateRangePicker'
 
 // crud交由presenter持有
 const defaultForm = {
@@ -105,7 +116,8 @@ export default {
   components: {
     udOperation,
     rrOperation,
-    crudOperation
+    crudOperation,
+    DateRangePicker
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data () {

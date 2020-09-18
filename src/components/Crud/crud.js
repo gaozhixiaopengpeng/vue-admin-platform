@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-09-09 11:15:47
- * @LastEditTime: 2020-09-18 10:38:08
+ * @LastEditTime: 2020-09-18 16:44:51
  * @LastEditors: Please set LastEditors
  * @Description: Crud
  * @FilePath: /vue-admin-platform/src/components/Crud/crud.js
@@ -567,17 +567,18 @@ function CRUD (options) {
           return
         }
         const lazyTreeNodeMap = table.store.states.lazyTreeNodeMap
-        const children = lazyTreeNodeMap[crud.getDataId(row)]
-        row.children = children
-        children.forEach(ele => {
-          const id = crud.getDataId(ele)
-          if (that.dataStatus[id] === undefined) {
-            that.dataStatus[id] = {
-              delete: 0,
-              edit: 0
+        row.children = lazyTreeNodeMap[crud.getDataId(row)]
+        if (row.children) {
+          row.children.forEach(ele => {
+            const id = crud.getDataId(ele)
+            if (that.dataStatus[id] === undefined) {
+              that.dataStatus[id] = {
+                delete: 0,
+                edit: 0
+              }
             }
-          }
-        })
+          })
+        }
       })
     }
   }
