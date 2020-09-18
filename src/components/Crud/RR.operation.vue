@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-09-12 15:22:19
- * @LastEditTime: 2020-09-12 15:28:25
+ * @LastEditTime: 2020-09-16 21:46:41
  * @LastEditors: Please set LastEditors
  * @Description: Curd: Search & Reset
  * @FilePath: /vue-admin-platform/src/components/Crud/RR.operation.vue
@@ -14,7 +14,7 @@
       type="success"
       icon="el-icon-search"
       @click="crud.toQuery"
-    ></el-button>
+    >搜索</el-button>
     <el-button
       v-if="crud.optShow.reset"
       class="filter-item"
@@ -22,15 +22,13 @@
       type="warning"
       icon="el-icon-refresh-left"
       @click="crud.resetQuery()"
-    ></el-button>
+    >重置</el-button>
   </span>
 </template>
-
 <script>
-import { crud } from './crud'
-
+import { crud } from '@crud/crud'
 export default {
-  mixins: [crud],
+  mixins: [crud()],
   props: {
     itemClass: {
       type: String,

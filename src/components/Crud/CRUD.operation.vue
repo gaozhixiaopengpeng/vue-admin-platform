@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-09-12 15:32:11
- * @LastEditTime: 2020-09-13 12:33:34
+ * @LastEditTime: 2020-09-16 21:46:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /vue-admin-platform/src/components/Crud/CRUD.operation.vue
@@ -77,9 +77,23 @@
     </el-button-group>
   </div>
 </template>
-
 <script>
-import CRUD, { crud } from './crud'
+import CRUD, { crud } from '@crud/crud'
+
+function sortWithRef (src, ref) {
+  const result = Object.assign([], ref)
+  let cursor = -1
+  src.forEach((e) => {
+    const idx = result.indexOf(e)
+    if (idx === -1) {
+      cursor += 1
+      result.splice(cursor, 0, e)
+    } else {
+      cursor = idx
+    }
+  })
+  return result
+}
 
 export default {
   mixins: [crud()],
@@ -119,7 +133,7 @@ export default {
       this.tableColumns.forEach((column) => {
         if (this.hiddenColumns.indexOf(column.property) !== -1) {
           column.visible = false
-          this.updateTableColumns(column)
+          this.updateColumnVisible(column)
         }
       })
     },
@@ -131,8 +145,50 @@ export default {
     this.crud.updateProp('searchToggle', true)
   },
   methods: {
-    toggleSearch () {
-      this.crud.props.searchToggle = !this.crud.props.searchToggle
+    updateTableColumns () {
+      const table = this.crud.getTable()
+      if (!table) {
+        this.tableColumns = []
+        return
+      }
+      let cols = null
+      const columnFilter = (e) =>
+        e &&
+        e.type === 'default' &&
+        e.property &&
+        this.ignoreColumns.indexOf(e.property) === -1
+      const refCols = table.columns.filter(columnFilter)
+      if (this.ignoreNextTableColumnsChange) {
+        this.ignoreNextTableColumnsChange = false
+        return
+      }
+      this.ignoreNextTableColumnsChange = false
+      const columns = []
+      const fullTableColumns = table.$children
+        .map((e) => e.columnConfig)
+        .filter(columnFilter)
+      cols = sortWithRef(fullTableColumns, refCols)
+      cols.forEach((config) => {
+        const column = {
+          property: config.property,
+          label: config.label,
+          visible: refCols.indexOf(config) !== -1
+        }
+        columns.push(column)
+      })
+      this.tableColumns = columns
+    },
+    toDelete (datas) {
+      this.$confirm(`确认删除选中的${datas.length}条数据?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.crud.delAllLoading = true
+          this.crud.doDelete(datas)
+        })
+        .catch(() => {})
     },
     handleCheckAllChange (val) {
       if (val === false) {
@@ -163,23 +219,30 @@ export default {
         return
       }
       this.allColumnsSelected = selectedCount === totalCount
-      this.allColumnsSelectedIndeterminate = selectedCount !== totalCount && selectedCount !== 0
+      this.allColumnsSelectedIndeterminate =
+        selectedCount !== totalCount && selectedCount !== 0
       this.updateColumnVisible(item)
     },
     updateColumnVisible (item) {
       const table = this.crud.props.table
-      const vm = table.$children.find(e => e.prop === item.property)
+      const vm = table.$children.find((e) => e.prop === item.property)
       const columnConfig = vm.columnConfig
-
       if (item.visible) {
-        // 找到合适的插入点
+        // 找出合适的插入点
         const columnIndex = this.tableColumns.indexOf(item)
-        vm.owner.store.commit('insertColumn', columnConfig, columnIndex + 1, null)
+        vm.owner.store.commit(
+          'insertColumn',
+          columnConfig,
+          columnIndex + 1,
+          null
+        )
       } else {
         vm.owner.store.commit('removeColumn', columnConfig, null)
       }
-
       this.ignoreNextTableColumnsChange = true
+    },
+    toggleSearch () {
+      this.crud.props.searchToggle = !this.crud.props.searchToggle
     }
   }
 }

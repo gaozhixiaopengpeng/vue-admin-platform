@@ -1,7 +1,7 @@
 /*
  * @Author: zhipeng
  * @Date: 2020-06-21 12:28:32
- * @LastEditTime: 2020-08-20 21:25:28
+ * @LastEditTime: 2020-09-18 15:40:27
  * @LastEditors: Please set LastEditors
  * @Description: main file
  * @FilePath: /vue-admin-platform/src/main.js
@@ -30,12 +30,16 @@ import './assets/styles/index.scss'
 // permission control
 import './router/index'
 
+// 权限指令
+import permission from './components/Permission'
+
 Vue.config.productionTip = false
 
 Vue.use(i18n)
 Vue.use(Element, {
   size: Cookies.get('size' || 'small') // set element-ui default size
 })
+Vue.use(permission)
 
 /* eslint-disable no-new */
 new Vue({

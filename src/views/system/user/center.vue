@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-08-30 19:55:59
- * @LastEditTime: 2020-09-05 15:39:34
+ * @LastEditTime: 2020-09-18 14:56:43
  * @LastEditors: Please set LastEditors
  * @Description: User Center
  * @FilePath: /vue-admin-platform/src/views/system/user/center.vue
@@ -16,19 +16,20 @@
           </div>
           <div>
             <div style="text-align: center">
-              <img
-                :src="user.avatar ? baseApi + '/avatar/' + user.avatar : Avatar"
-                title="点击上传头像"
-                class="avatar"
-                @click="toggleShow"
-              />
-              <my-upload
-                v-model="show"
-                :headers="headers"
-                :url="updateAvatarApi"
-                @crop-upload-success="cropUploadSuccess"
-                @cropUploadFail="cropUploadFail"
-              />
+              <div class="el-upload">
+                <img
+                  :src="user.avatarName ? baseApi + '/avatar/' + user.avatarName : Avatar"
+                  title="点击上传头像"
+                  class="avatar"
+                  @click="toggleShow"
+                />
+                <myUpload
+                  v-model="show"
+                  :headers="headers"
+                  :url="updateAvatarApi"
+                  @crop-upload-success="cropUploadSuccess"
+                />
+              </div>
             </div>
             <ul class="user-info">
               <li>
@@ -42,16 +43,16 @@
                 <div class="user-right">{{ user.nickName }}</div>
               </li>
               <li>
+                <svg-icon icon-class="dept" />所属部门
+                <div class="user-right">{{ user.dept.name }}</div>
+              </li>
+              <li>
                 <svg-icon icon-class="phone" />手机号码
                 <div class="user-right">{{ user.phone }}</div>
               </li>
               <li>
                 <svg-icon icon-class="email" />用户邮箱
                 <div class="user-right">{{ user.email }}</div>
-              </li>
-              <li>
-                <svg-icon icon-class="dept" />所属部门
-                <div class="user-right">{{ user.dept }} / {{ user.job }}</div>
               </li>
               <li>
                 <svg-icon icon-class="anq" />安全设置
@@ -64,11 +65,10 @@
           </div>
         </el-card>
       </el-col>
-      <!-- 用户资料 & 操作日志 -->
       <el-col :xs="24" :sm="24" :md="16" :lg="18" :xl="19">
+        <!--    用户资料    -->
         <el-card class="box-card">
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <!-- 用户资料 -->
             <el-tab-pane label="用户资料" name="first">
               <el-form
                 ref="form"
@@ -87,7 +87,7 @@
                   <span style="color: #C0C0C0;margin-left: 10px;">手机号码不能重复</span>
                 </el-form-item>
                 <el-form-item label="性别">
-                  <el-radio-group v-model="form.sex" style="width: 178px">
+                  <el-radio-group v-model="form.gender" style="width: 178px">
                     <el-radio label="男">男</el-radio>
                     <el-radio label="女">女</el-radio>
                   </el-radio-group>
@@ -105,7 +105,7 @@
             <!--    操作日志    -->
             <el-tab-pane label="操作日志" name="second">
               <el-table v-loading="loading" :data="data" style="width: 100%;">
-                <el-table-column :show-overflow-tooltip="true" prop="description" label="行为" />
+                <el-table-column prop="description" label="行为" />
                 <el-table-column prop="requestIp" label="IP" />
                 <el-table-column :show-overflow-tooltip="true" prop="address" label="IP来源" />
                 <el-table-column prop="browser" label="浏览器" />
@@ -128,7 +128,7 @@
                   </template>
                 </el-table-column>
               </el-table>
-
+              <!--分页组件-->
               <el-pagination
                 :total="total"
                 :current-page="page + 1"
@@ -136,13 +136,12 @@
                 layout="total, prev, pager, next, sizes"
                 @size-change="sizeChange"
                 @current-change="pageChange"
-              ></el-pagination>
+              />
             </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
     </el-row>
-
     <updateEmail ref="email" :email="user.email" />
     <updatePass ref="pass" />
   </div>
@@ -153,19 +152,19 @@ import myUpload from 'vue-image-crop-upload'
 import { mapGetters } from 'vuex'
 import updatePass from './center/updatePass'
 import updateEmail from './center/updateEmail'
-import Avatar from '@/assets/images/avatar.png'
-import store from '@/store'
 import { getToken } from '@/utils/auth'
+import store from '@/store'
 import { isvalidPhone } from '@/utils/validate'
-import { editUser } from '@/api/system/user'
-import crud from '@/mixins/crud'
 import { parseTime } from '@/utils/index'
-
+import crud from '@/mixins/crud'
+import { editUser } from '@/api/system/user'
+import Avatar from '@/assets/images/avatar.png'
 export default {
   name: 'Center',
   components: { updatePass, updateEmail, myUpload },
   mixins: [crud],
   data () {
+    // 自定义验证
     const validPhone = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入电话号码'))
@@ -178,10 +177,11 @@ export default {
     return {
       show: false,
       Avatar: Avatar,
+      activeName: 'first',
+      saveLoading: false,
       headers: {
         Authorization: getToken()
       },
-      activeName: 'first',
       form: {},
       rules: {
         nickName: [
@@ -194,85 +194,64 @@ export default {
           }
         ],
         phone: [{ required: true, trigger: 'blur', validator: validPhone }]
-      },
-      saveLoading: false
+      }
     }
   },
   computed: {
-    ...mapGetters(['user', 'baseApi', 'updateAvatarApi'])
+    ...mapGetters(['user', 'updateAvatarApi', 'baseApi'])
   },
   created () {
     this.form = {
       id: this.user.id,
       nickName: this.user.nickName,
-      sex: this.user.sex,
+      gender: this.user.gender,
       phone: this.user.phone
     }
+    store.dispatch('GetInfo').then(() => {})
   },
   methods: {
     parseTime,
-    beforeInit () {
-      this.url = 'api/logs/user'
-      return true
-    },
     toggleShow () {
       this.show = !this.show
-    },
-    cropUploadSuccess (jsonData, field) {
-      this.$notify({
-        title: '头像修改成功',
-        type: 'success',
-        duration: 2500
-      })
-      store.dispatch('GetInfo').then(() => {})
-    },
-    cropUploadFail (status, field) {
-      this.$notify({
-        title: status,
-        type: 'error',
-        duration: 2500
-      })
     },
     handleClick (tab, event) {
       if (tab.name === 'second') {
         this.init()
       }
     },
+    beforeInit () {
+      this.url = 'api/logs/user'
+      return true
+    },
+    cropUploadSuccess (jsonData, field) {
+      store.dispatch('GetInfo').then(() => {})
+    },
     doSubmit () {
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          this.saveLoading = true
-          editUser(this.form)
-            .then((res) => {
-              this.saveLoading = false
-              this.editSuccessNotify()
-              store.dispatch('GetInfo').then(() => {})
-            })
-            .catch((error) => {
-              this.saveLoading = false
-              console.log('Update User Information Error')
-              console.log(error)
-            })
-        }
-      })
+      if (this.$refs['form']) {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.saveLoading = true
+            editUser(this.form)
+              .then(() => {
+                this.editSuccessNotify()
+                store.dispatch('GetInfo').then(() => {})
+                this.saveLoading = false
+              })
+              .catch(() => {
+                this.saveLoading = false
+              })
+          }
+        })
+      }
     }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-.avatar-uploader-icon {
-  font-size: 28px;
-  width: 120px;
-  height: 120px;
-  line-height: 120px;
-  text-align: center;
-}
-
 .avatar {
   width: 120px;
   height: 120px;
-  display: block;
   border-radius: 50%;
 }
 .user-info {
@@ -285,7 +264,6 @@ export default {
   }
   .user-right {
     float: right;
-
     a {
       color: #317ef3;
     }
