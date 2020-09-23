@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-09-05 17:45:28
- * @LastEditTime: 2020-09-18 17:32:13
+ * @LastEditTime: 2020-09-23 16:19:40
  * @LastEditors: Please set LastEditors
  * @Description: Menu Management
  * @FilePath: /vue-admin-platform/src/views/system/menu/index.vue
@@ -12,12 +12,144 @@
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
-        <el-input v-model="query.blurry" clearable size="small" placeholder="模糊搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery"/>
+        <el-input
+          v-model="query.blurry"
+          clearable
+          size="small"
+          placeholder="模糊搜索"
+          style="width: 200px;"
+          class="filter-item"
+          @keyup.enter.native="crud.toQuery"
+        />
         <date-range-picker v-model="query.createTime" class="date-item" />
-         <rrOperation />
+        <rrOperation />
       </div>
       <crudOperation :permission="permission" />
     </div>
+
+    <!-- 表单渲染 -->
+    <el-dialog
+      append-to-body
+      :close-on-click-modal="false"
+      :before-close="crud.cancelCU"
+      :visible.sync="crud.status.cu > 0"
+      width="580px"
+    >
+      <el-form
+        ref="form"
+        :inline="true"
+        :model="form"
+        :rules="rules"
+        size="small"
+        label-width="80px"
+      >
+        <el-form-item label="菜单类型" prop="type">
+          <el-radio-group v-model="form.type" size="mini" style="width: 178px">
+            <el-radio-button label="0">目录</el-radio-button>
+            <el-radio-button label="1">菜单</el-radio-button>
+            <el-radio-button label="2">按钮</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() !== 2" label="菜单图标" prop="icon">
+          <el-popover
+            placement="bottom-start"
+            width="450"
+            trigger="click"
+            @show="$refs['iconSelect'].reset()"
+          >
+            <IconSelect ref="iconSelect" @selected="selected" />
+            <el-input
+              slot="reference"
+              v-model="form.icon"
+              style="width: 450px;"
+              placeholder="点击选择图标"
+              readonly
+            >
+              <svg-icon
+                v-if="form.icon"
+                slot="prefix"
+                :icon-class="form.icon"
+                class="el-input__icon"
+                style="height: 32px;width: 16px;"
+              />
+              <i v-else slot="prefix" class="el-icon-search el-input__icon" />
+            </el-input>
+          </el-popover>
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() !== '2'" label="外链菜单" prop="iframe">
+          <el-radio-group v-model="form.iframe" size="mini">
+            <el-radio-button label="true">是</el-radio-button>
+            <el-radio-button label="false">否</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() === '1'" label="菜单缓存" prop="cache">
+          <el-radio-group v-model="form.cache" size="mini">
+            <el-radio-button label="true">是</el-radio-button>
+            <el-radio-button label="false">否</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() !== '2'" label="菜单可见" prop="hidden">
+          <el-radio-group v-model="form.hidden" size="mini">
+            <el-radio-button label="false">是</el-radio-button>
+            <el-radio-button label="true">否</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="form.type.toString() !== '2'" label="菜单标题" prop="title">
+          <el-input
+            v-model="form.title"
+            :style=" form.type.toString() === '0' ? 'width: 450px' : 'width: 178px'"
+            placeholder="菜单标题"
+          />
+        </el-form-item>
+        <el-form-item v-if="form.type.toString() === '2'" label="按钮名称" prop="title">
+          <el-input v-model="form.title" placeholder="按钮名称" style="width: 178px;" />
+        </el-form-item>
+        <el-form-item v-show="form.type.toString() !== '0'" label="权限标识" prop="permission">
+          <el-input
+            v-model="form.permission"
+            :disabled="form.iframe"
+            placeholder="权限标识"
+            style="width: 178px;"
+          />
+        </el-form-item>
+        <el-form-item v-if="form.type.toString() !== '2'" label="路由地址" prop="path">
+          <el-input v-model="form.path" placeholder="路由地址" style="width: 178px;" />
+        </el-form-item>
+        <el-form-item label="菜单排序" prop="menuSort">
+          <el-input-number
+            v-model.number="form.menuSort"
+            :min="0"
+            :max="999"
+            controls-position="right"
+            style="width: 178px;"
+          />
+        </el-form-item>
+        <el-form-item
+          v-show="!form.iframe && form.type.toString() === '1'"
+          label="组件名称"
+          prop="componentName"
+        >
+          <el-input v-model="form.componentName" style="width: 178px;" placeholder="匹配组件内Name字段" />
+        </el-form-item>
+        <el-form-item
+          v-show="!form.iframe && form.type.toString() === '1'"
+          label="组件路径"
+          prop="component"
+        >
+          <el-input v-model="form.component" style="width: 178px;" placeholder="组件路径" />
+        </el-form-item>
+        <el-form-item label="上级类目" prop="pid">
+          <treeselect
+            v-model="form.pid"
+            :options="menus"
+            :load-options="loadMenus"
+            style="width: 450px;"
+            placeholder="选择上级类目"
+          />
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
     <!--表格渲染-->
     <el-table
       ref="table"
@@ -92,6 +224,9 @@ import udOperation from '@crud/UD.operation'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import DateRangePicker from '@/components/DateRangePicker'
+import IconSelect from '@/components/IconSelect'
+import Treeselect, { LOAD_CHILDREN_OPTIONS } from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 // crud交由presenter持有
 const defaultForm = {
@@ -117,16 +252,26 @@ export default {
     udOperation,
     rrOperation,
     crudOperation,
-    DateRangePicker
+    DateRangePicker,
+    IconSelect,
+    Treeselect
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data () {
     return {
-      menu: [],
+      menus: [],
       permission: {
         add: ['admin', 'menu:add'],
         edit: ['admin', 'menu:edit'],
         del: ['admin', 'menu:del']
+      },
+      rules: {
+        title: [
+          { required: true, message: '请输入标题', trigger: 'blur' }
+        ],
+        path: [
+          { required: true, message: '请输入地址', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -153,13 +298,13 @@ export default {
     getMenus (tree, treeNode, resolve) {
       const params = { pid: tree.id }
       setTimeout(() => {
-        crudMenu.getMenus(params).then(res => {
+        crudMenu.getMenus(params).then((res) => {
           resolve(res.content)
         })
       }, 100)
     },
     getSupDepts (id) {
-      crudMenu.getMenuSuperior(id).then(res => {
+      crudMenu.getMenuSuperior(id).then((res) => {
         const children = res.map(function (obj) {
           if (!obj.leaf && !obj.children) {
             obj.children = null
@@ -172,6 +317,21 @@ export default {
     // 选中图标
     selected (name) {
       this.form.icon = name
+    },
+    loadMenus ({ action, parentNode, callback }) {
+      if (action === LOAD_CHILDREN_OPTIONS) {
+        crudMenu.getMenusTree(parentNode.id).then(res => {
+          parentNode.children = res.map(function (obj) {
+            if (!obj.leaf) {
+              obj.children = null
+            }
+            return obj
+          })
+          setTimeout(() => {
+            callback()
+          }, 100)
+        })
+      }
     }
   }
 }
