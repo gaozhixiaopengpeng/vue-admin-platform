@@ -1,7 +1,7 @@
 <!--
  * @Author: zhipeng
  * @Date: 2020-09-05 17:45:28
- * @LastEditTime: 2020-09-23 16:19:40
+ * @LastEditTime: 2020-09-23 17:10:36
  * @LastEditors: Please set LastEditors
  * @Description: Menu Management
  * @FilePath: /vue-admin-platform/src/views/system/menu/index.vue
@@ -148,6 +148,10 @@
           />
         </el-form-item>
       </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="text" @click="crud.cancelCU">取消</el-button>
+        <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+      </div>
     </el-dialog>
 
     <!--表格渲染-->
@@ -266,12 +270,8 @@ export default {
         del: ['admin', 'menu:del']
       },
       rules: {
-        title: [
-          { required: true, message: '请输入标题', trigger: 'blur' }
-        ],
-        path: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
-        ]
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+        path: [{ required: true, message: '请输入地址', trigger: 'blur' }]
       }
     }
   },
@@ -320,7 +320,7 @@ export default {
     },
     loadMenus ({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
-        crudMenu.getMenusTree(parentNode.id).then(res => {
+        crudMenu.getMenusTree(parentNode.id).then((res) => {
           parentNode.children = res.map(function (obj) {
             if (!obj.leaf) {
               obj.children = null
