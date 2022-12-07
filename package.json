@@ -61,7 +61,7 @@
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.8",
     "postcss-url": "^7.2.1",
-    "qs": "^6.9.4",
+    "qs": "^6.9.7",
     "rimraf": "^2.6.0",
     "sass-loader": "^7.1.0",
     "screenfull": "^5.0.2",
